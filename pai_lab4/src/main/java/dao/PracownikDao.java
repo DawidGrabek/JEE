@@ -4,6 +4,7 @@ import beans.Pracownik;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
@@ -12,7 +13,7 @@ public class PracownikDao {
     JdbcTemplate template;
 
     public void setTemplate(JdbcTemplate template) {
-        this.template = template; //wstrzyknięcie przez metodę set
+        this.template = template;
     }
 
     public int save(Pracownik p) {
@@ -34,5 +35,20 @@ public class PracownikDao {
                 return e;
             }
         });
+    }
+    
+    public int delete(int id) {
+        String sql = "DELETE FROM pracownik WHERE id = ?";
+        return template.update(sql, id);
+    }
+    
+    public int update(Pracownik p) {
+        String sql = "UPDATE pracownik SET nazwisko = ?, pensja = ?, firma = ? WHERE id = ?";
+        return template.update(sql, p.getNazwisko(), p.getPensja(), p.getFirma(), p.getId());
+    }
+
+    public Pracownik getPracownikById(int id) {
+        String sql = "SELECT * FROM pracownik WHERE id = ?";
+        return template.queryForObject(sql, new Object[]{id}, new BeanPropertyRowMapper<>(Pracownik.class));
     }
 }
