@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="pl" xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="head">
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1" name="viewport"/>
+    <title>Spring login application - PL</title>
+    <style>
+        .footer {
+            position: fixed;
+            bottom: 0;
+            left: 1px;
+            height: 50px;
+            width: 100%;
+        }
+
+        .nav > li {
+            display: inline;
+            background: limegreen;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        th, td {
+            border: solid 1px black;
+            padding: 5px;
+        }
+
+        .error-message {
+            color: #721c24; /* Red color for text */
+            background-color: #f8d7da; /* Light red background color */
+            border: 1px solid #f5c6cb; /* Dark red border */
+            padding: 10px; /* Padding for space around the message */
+            margin-bottom: 15px; /* Margin at the bottom of the message */
+        }
+
+        .error {
+            color: #e21428; /* Red color for text */
+        }
+
+    </style>
+</head>
+<body>
+<div th:fragment="navigationPanel">
+    <ul class="nav">
+        <li th:if="${not #authorization.expression('isAuthenticated()')}">
+            <a th:href="@{/register}">Zarejestruj się</a>
+        </li>
+        <li th:if="${#authorization.expression('isAuthenticated()')}">
+            <a th:href="@{/profile}">Wyświetl swoje konto</a>
+        </li>
+        <li th:if="${#authorization.expression('isAuthenticated()')}">
+            <a th:href="@{/users}">Wyświetl użytkowników</a>
+        </li>
+        <li th:if="${not #authorization.expression('isAuthenticated()')}">
+            <a th:href="@{/login}">Zaloguj się</a>
+        </li>
+        <li th:if="${#authorization.expression('isAuthenticated()')}">
+            <a th:href="@{/users/current/edit}">Edytuj konto</a>
+        </li>
+        <li th:if="${#authorization.expression('isAuthenticated()')}">
+            <a th:href="@{/users/current/delete}">Usuń konto</a>
+        </li>
+        <li th:if="${#authorization.expression('isAuthenticated()')}">
+            <a th:href="@{/logout}">Wyloguj się</a>
+        </li>
+    </ul>
+</div>
+<div th:fragment="footer">
+    <footer class="footer" style="text-align: center;">
+        <hr style="margin: 0"/>
+        <p>Politechnika Lubelska, wprowadzenie do Spring Boot.</p>
+    </footer>
+</div>
+</body>
+</html>

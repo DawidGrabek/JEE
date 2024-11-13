@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pl" xmlns:th="http://www.thymeleaf.org">
+<head th:insert="~{layout :: head}"></head>
+<body>
+<div th:insert="~{layout :: navigationPanel}"></div>
+<h1>Rejestracja:</h1>
+<form method="POST" th:action="@{/register}" th:object="${user}">
+    <div class="error-message" th:if="${#fields.hasErrors('*')}">
+        Please fix the errors below and try again.
+    </div>
+
+    <table>
+        <tr>
+            <td><label for="name">Imię:</label></td>
+            <td>
+                <input id="name" placeholder="Imię" th:field="*{name}" type="text"/>
+                <div class="error" th:errors="*{name}" th:if="${#fields.hasErrors('name')}"></div>
+            </td>
+        </tr>
+        <tr>
+            <td><label for="surname">Nazwisko:</label></td>
+            <td>
+                <input id="surname" placeholder="Nazwisko" th:field="*{surname}" type="text"/>
+                <div class="error" th:errors="*{surname}" th:if="${#fields.hasErrors('surname')}"></div>
+            </td>
+        </tr>
+        <tr>
+            <td><label for="login">Login:</label></td>
+            <td>
+                <input id="login" placeholder="Login" th:field="*{login}" type="text"/>
+                <div class="error" th:errors="*{login}" th:if="${#fields.hasErrors('login')}"></div>
+            </td>
+        </tr>
+        <tr>
+            <td><label for="password">Hasło:</label></td>
+            <td>
+                <input id="password" placeholder="Hasło" th:field="*{password}" type="password"/>
+                <div class="error" th:errors="*{password}" th:if="${#fields.hasErrors('password')}"></div>
+            </td>
+        </tr>
+    </table>
+    <br/>
+    <button type="submit">Zarejestruj się</button>
+</form>
+<div th:insert="~{layout :: footer}"></div>
+</body>
+</html>
