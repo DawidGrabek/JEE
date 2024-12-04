@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Students</title>
+</head>
+<body>
+
+<h1>Students</h1>
+
+<form id="studentForm">
+    <table>
+        <tr>
+            <td><label for="name">Name:</label></td>
+            <td><input id="name" required type="text"></td>
+        </tr>
+        <tr>
+            <td><label for="surname">Surname:</label></td>
+            <td><input id="surname" required type="text"></td>
+        </tr>
+        <tr>
+            <td><label for="average">Average:</label></td>
+            <td><input id="average" required step="0.01" type="number"></td>
+        </tr>
+    </table>
+
+    <button onclick="createStudent()" type="button">Create</button>
+    <button onclick="saveStudent()" style="display: none;" type="button">Save</button>
+    <button onclick="cancelEdit()" style="display: none;" type="button">Cancel</button>
+</form>
+
+<h2>List</h2>
+<div id="studentList"></div>
+
+<script src="scripts.js"></script>
+
+</body>
+</html>
