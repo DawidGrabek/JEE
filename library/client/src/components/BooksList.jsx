@@ -1,28 +1,71 @@
-import React from 'react'
-import { Card, CardContent, Typography } from '@mui/material'
+import React, { useEffect, useState } from 'react'
+import {
+  Box,
+  Typography,
+  List,
+  ListItem,
+  ListItemText,
+  Chip,
+} from '@mui/material'
+import { useNavigate } from 'react-router-dom'
 
-// Przykładowe dane książek
-const books = [
-  { id: 1, title: 'The Great Gatsby', author: 'F. Scott Fitzgerald' },
-  { id: 2, title: 'To Kill a Mockingbird', author: 'Harper Lee' },
-  { id: 3, title: '1984', author: 'George Orwell' },
-  { id: 4, title: 'Moby Dick', author: 'Herman Melville' },
-]
+function BooksList() {
+  const [books, setBooks] = useState([])
+  const navigate = useNavigate()
 
-const BooksList = () => {
+  useEffect(() => {
+    const fetchBooks = async () => {
+      const token = localStorage.getItem('token') // Pobierz token z localStorage
+
+      try {
+        const response = await fetch('http://localhost:8080/api/books', {
+          headers: {
+            Authorization: `Bearer ${token}`, // Dodanie tokena do nagłówka
+          },
+        })
+
+        if (response.ok) {
+          const data = await response.json()
+          setBooks(data)
+        } else if (response.status === 401 || response.status === 403) {
+          // Obsługa braku uprawnień
+          console.error('Brak autoryzacji. Przekierowanie do logowania.')
+          navigate('/') // Przekierowanie na stronę logowania
+        } else {
+          console.error('Błąd podczas pobierania danych.')
+        }
+      } catch (error) {
+        console.error('Błąd połączenia z serwerem:', error)
+      }
+    }
+
+    fetchBooks()
+  }, [navigate])
+
   return (
-    <div>
-      {books.map((book) => (
-        <Card key={book.id} style={{ marginBottom: '16px' }}>
-          <CardContent>
-            <Typography variant="h6">{book.title}</Typography>
-            <Typography variant="body2" color="textSecondary">
-              Author: {book.author}
-            </Typography>
-          </CardContent>
-        </Card>
-      ))}
-    </div>
+    <Box>
+      <Typography variant="h5" gutterBottom>
+        Dostępne Książki
+      </Typography>
+      {books.length > 0 ? (
+        <List>
+          {books.map((book) => (
+            <ListItem key={book.id}>
+              <ListItemText
+                primary={book.title}
+                secondary={`Autor: ${book.author}`}
+              />
+              <Chip
+                label={book.available ? 'Dostępna' : 'Wypożyczona'}
+                color={book.available ? 'success' : 'error'}
+              />
+            </ListItem>
+          ))}
+        </List>
+      ) : (
+        <Typography>Brak książek w bibliotece.</Typography>
+      )}
+    </Box>
   )
 }
 

@@ -1,65 +1,71 @@
-import React from 'react'
-import {
-  Box,
-  Typography,
-  Table,
-  TableHead,
-  TableRow,
-  TableCell,
-  TableBody,
-  Button,
-} from '@mui/material'
+import React, { useEffect, useState } from 'react'
+import { Box, Typography, List, ListItem, ListItemText } from '@mui/material'
+import { useNavigate } from 'react-router-dom'
 
 function LoansList() {
-  const loans = [
-    {
-      id: 1,
-      title: 'Book 1',
-      loanDate: '2023-12-01',
-      returnDate: '2024-01-01',
-    },
-    {
-      id: 2,
-      title: 'Book 2',
-      loanDate: '2023-11-01',
-      returnDate: '2023-12-01',
-    },
-  ]
+  const [loans, setLoans] = useState([])
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    const fetchLoans = async () => {
+      const token = localStorage.getItem('token') // Pobierz token z localStorage
+
+      try {
+        const response = await fetch('http://localhost:8080/api/loans', {
+          headers: {
+            Authorization: `Bearer ${token}`, // Dodanie tokena do nagłówka
+          },
+        })
+
+        if (response.ok) {
+          const data = await response.json()
+          setLoans(data)
+        } else if (response.status === 401 || response.status === 403) {
+          // Obsługa braku uprawnień
+          console.error('Brak autoryzacji. Przekierowanie do logowania.')
+          navigate('/') // Przekierowanie na stronę logowania
+        } else {
+          console.error('Błąd podczas pobierania danych.')
+        }
+      } catch (error) {
+        console.error('Błąd połączenia z serwerem:', error)
+      }
+    }
+
+    fetchLoans()
+  }, [navigate])
 
   return (
-    <Box>
-      <Typography variant="h5">Lista wypożyczeń</Typography>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell>Tytuł</TableCell>
-            <TableCell>Data wypożyczenia</TableCell>
-            <TableCell>Data zwrotu</TableCell>
-            <TableCell>Akcje</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
+    <Box sx={{ marginBottom: 4 }}>
+      <Typography variant="h5" gutterBottom>
+        Twoje Wypożyczenia
+      </Typography>
+      {loans.length > 0 ? (
+        <List>
           {loans.map((loan) => (
-            <TableRow key={loan.id}>
-              <TableCell>{loan.title}</TableCell>
-              <TableCell>{loan.loanDate}</TableCell>
-              <TableCell>{loan.returnDate}</TableCell>
-              <TableCell>
-                <Button variant="contained" color="primary">
-                  Przedłuż
-                </Button>
-                <Button
-                  variant="contained"
-                  color="secondary"
-                  sx={{ marginLeft: 1 }}
-                >
-                  Oddaj
-                </Button>
-              </TableCell>
-            </TableRow>
+            <ListItem key={loan.id}>
+              <ListItemText
+                sx={{
+                  display: 'flex',
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  gap: 2,
+                }}
+                primary={`Tytuł: ${loan.title}`}
+                secondary={
+                  <>
+                    <div>Użytkownik: {loan.username}</div>
+                    <div>Data wypożyczenia: {loan.rentalDate}</div>
+                    <div>Data zwrotu: {loan.returnDate}</div>
+                  </>
+                }
+              />
+            </ListItem>
           ))}
-        </TableBody>
-      </Table>
+        </List>
+      ) : (
+        <Typography>Brak aktywnych wypożyczeń.</Typography>
+      )}
     </Box>
   )
 }

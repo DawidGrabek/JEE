@@ -15,7 +15,6 @@ function Dashboard() {
 
   return (
     <Box>
-      {/* Header */}
       <Box
         sx={{
           display: 'flex',
@@ -26,11 +25,11 @@ function Dashboard() {
           color: 'white',
         }}
       >
-        <Typography variant="h6">Library App</Typography>
+        <Typography variant="h4">Library App</Typography>
         <Box>
-          <Typography variant="body1" sx={{ marginRight: 2 }}>
+          {/* <Typography variant="body1" sx={{ marginRight: 2 }}>
             Witaj, {username}
-          </Typography>
+          </Typography> */}
           <Button variant="contained" color="secondary" onClick={handleLogout}>
             Wyloguj
           </Button>
