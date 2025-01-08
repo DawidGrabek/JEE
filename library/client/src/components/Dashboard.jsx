@@ -7,9 +7,10 @@ import BooksList from './BooksList'
 function Dashboard() {
   const location = useLocation()
   const navigate = useNavigate()
-  const username = location.state?.username || 'Gość'
 
   const handleLogout = () => {
+    localStorage.removeItem('token')
+    localStorage.removeItem('userData')
     navigate('/')
   }
 
@@ -27,9 +28,6 @@ function Dashboard() {
       >
         <Typography variant="h4">Library App</Typography>
         <Box>
-          {/* <Typography variant="body1" sx={{ marginRight: 2 }}>
-            Witaj, {username}
-          </Typography> */}
           <Button variant="contained" color="secondary" onClick={handleLogout}>
             Wyloguj
           </Button>

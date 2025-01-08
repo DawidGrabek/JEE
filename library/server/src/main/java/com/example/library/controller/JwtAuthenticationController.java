@@ -1,5 +1,7 @@
 package com.example.library.controller;
 import com.example.library.config.JwtTokenUtil;
+
+import java.util.Map;
 import java.util.Objects;
 
 import com.example.library.entity.LibraryUser;
@@ -34,7 +36,10 @@ public class JwtAuthenticationController {
                 userDetailsService.loadUserByUsername(authenticationRequest
                         .getUsername());
         final String token = jwtTokenUtil.generateToken(userDetails);
-        return ResponseEntity.ok(new JwtResponse(token));
+        String username = userDetails.getUsername();
+
+        return ResponseEntity.ok(Map.of("token", token, "username", username));
+//        return ResponseEntity.ok(new JwtResponse(token));
     }
 
     @RequestMapping(value = "/register", method = RequestMethod.POST)

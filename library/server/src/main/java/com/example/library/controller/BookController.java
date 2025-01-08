@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin("http://localhost:5173")
 @RestController
 @RequestMapping("/api/books")
 public class BookController {
@@ -55,8 +56,8 @@ public class BookController {
     }
 
     // Endpoint: Generuj kilka książek
-    @PostMapping("/generate")
-    public List<BookDto> generateBooks() {
-        return bookService.generateBooks(10).stream().map(BookDto::new).toList();
-    }
+//    @PostMapping("/generate")
+//    public List<BookDto> generateBooks() {
+//        return bookService.generateBooks(10).stream().map(BookDto::new).toList();
+//    }
 }

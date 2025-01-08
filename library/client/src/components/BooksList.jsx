@@ -26,9 +26,8 @@ function BooksList() {
 
         if (response.ok) {
           const data = await response.json()
-          setBooks(data)
+          setBooks(data) // Aktualizuj stan książek
         } else if (response.status === 401 || response.status === 403) {
-          // Obsługa braku uprawnień
           console.error('Brak autoryzacji. Przekierowanie do logowania.')
           navigate('/') // Przekierowanie na stronę logowania
         } else {

@@ -44,7 +44,25 @@ function LoginForm() {
         setErrors({ username: '', password: '', general: '' }) // Resetowanie błędów
         localStorage.setItem('token', data.token)
 
-        navigate('/dashboard', { state: { username: data.username } })
+        // Pobranie danych użytkownika
+        const userResponse = await fetch(
+          `http://localhost:8080/api/users/username/${data.username}`,
+          {
+            headers: { Authorization: `Bearer ${data.token}` },
+          }
+        )
+
+        if (userResponse.ok) {
+          const userData = await userResponse.json()
+          localStorage.setItem('userData', JSON.stringify(userData))
+
+          navigate('/dashboard')
+        } else {
+          setErrors({
+            ...errors,
+            general: 'Nie udało się pobrać danych użytkownika.',
+          })
+        }
       } else {
         setErrors({
           ...errors,
@@ -58,7 +76,7 @@ function LoginForm() {
         ...errors,
         username: '',
         password: '',
-        general: 'Nieprawidłowe dane logowania.',
+        general: 'Błąd połączenia z serwerem.',
       })
     }
   }

@@ -47,8 +47,9 @@ public class WebSecurityConfig {
     @Bean
     protected SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
+                .cors().and()
                 .authorizeHttpRequests(auth->auth
-                        .requestMatchers("/authenticate","/register","/api/loans").permitAll()
+                        .requestMatchers("/authenticate","/register").permitAll()
                         .anyRequest().authenticated())
                 // sesja nie przechowujestanu użytkownika.
                 .exceptionHandling(
