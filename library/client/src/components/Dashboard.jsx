@@ -103,7 +103,7 @@ function Dashboard() {
       } else {
         console.error('Nie udało się usunąć wypożyczenia.')
         alert(
-          'Nie udało się usunąć wypożyczenia. To chyba nie twoje wypożyczenie'
+          'Nie udało się usunąć wypożyczenia. To chyba nie twoje wypożyczenie albo nie zwróciłeś książki.'
         )
       }
     } catch (error) {

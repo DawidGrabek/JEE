@@ -76,7 +76,7 @@ function LoginForm() {
         ...errors,
         username: '',
         password: '',
-        general: 'Błąd połączenia z serwerem.',
+        general: 'Nieprawidłowe dane logowania.',
       })
     }
   }

@@ -90,6 +90,12 @@ public class LoanService {
             throw new SecurityException("You are not authorized to delete this loan");
         }
 
+        // Sprawdź, czy książka została zwrócona
+        if (loan.getReturnDate() == null) {
+            throw new SecurityException("You can't delete a loan when the book has not been returned");
+        }
+
+
         loanRepository.delete(loan);
     }
 
