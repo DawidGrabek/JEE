@@ -96,8 +96,16 @@ function Dashboard() {
           headers: { Authorization: `Bearer ${token}` },
         }
       )
-      setLoans(loans.filter((loan) => loan.id !== loanId))
-      alert('Wypożyczenie zostało usunięte.')
+
+      if (response.ok) {
+        console.log('Wypożyczenie zostało usunięte.')
+        refreshData() // Synchronizacja danych po usunięciu
+      } else {
+        console.error('Nie udało się usunąć wypożyczenia.')
+        alert(
+          'Nie udało się usunąć wypożyczenia. To chyba nie twoje wypożyczenie'
+        )
+      }
     } catch (error) {
       console.error('Błąd usuwania wypożyczenia:', error)
       alert('Nie udało się usunąć wypożyczenia.')

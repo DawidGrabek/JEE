@@ -29,6 +29,10 @@ public class JwtUserDetailsService implements UserDetailsService {
     }
 
     public LibraryUser save(LibraryUser user) {
+        if (userRepository.findByUsername(user.getUsername()).isPresent()) {
+            throw new IllegalArgumentException("Username already exists");
+        }
+
         LibraryUser newUser = new LibraryUser();
         newUser.setUsername(user.getUsername());
         newUser.setPassword(bcryptEncoder.encode(user.getPassword()));

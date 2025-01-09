@@ -46,8 +46,16 @@ public class LoanController {
 
     @DeleteMapping("/{loanId}")
     public void deleteLoan(@PathVariable Long loanId) {
-        loanService.deleteLoan(loanId);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName(); // Login użytkownika
+
+        // Pobierz użytkownika z bazy na podstawie loginu
+        LibraryUser libraryUser = loanService.getUserByUsername(username);
+
+        // Przekazanie użytkownika do serwisu w celu walidacji i usunięcia wypożyczenia
+        loanService.deleteLoan(libraryUser, loanId);
     }
+
 
     @GetMapping
     public List<LoanDto> getAllRentals() {

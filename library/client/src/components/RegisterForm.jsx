@@ -61,23 +61,17 @@ function RegisterForm() {
       } else {
         setErrors({
           ...errors,
-          username: '',
-          password: '',
-          confirmPassword: '',
+          username: data.error === 'Username already exists' ? data.error : '',
           general:
-            data.errors.username ||
-            data.errors.password ||
-            'Nie udało się zarejestrować użytkownika.',
+            data.error && data.error !== 'Username already exists'
+              ? data.error
+              : 'Nie udało się zarejestrować użytkownika.',
         })
       }
     } catch (error) {
       console.log(error)
-
       setErrors({
         ...errors,
-        username: '',
-        password: '',
-        confirmPassword: '',
         general: 'Wystąpił błąd podczas rejestracji. Spróbuj ponownie później.',
       })
     }

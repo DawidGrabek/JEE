@@ -44,7 +44,11 @@ public class JwtAuthenticationController {
 
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public ResponseEntity<?> saveUser(@Valid @RequestBody LibraryUser user) {
-        return ResponseEntity.ok(userDetailsService.save(user));
+        try {
+            return ResponseEntity.ok(userDetailsService.save(user));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+        }
     }
 
     private void authenticate(String username, String password) throws Exception {

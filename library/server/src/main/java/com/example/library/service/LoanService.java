@@ -81,14 +81,14 @@ public class LoanService {
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
     }
 
-    public void deleteLoan(Long loanId) {
+    public void deleteLoan(LibraryUser libraryUser, Long loanId) {
         Loan loan = loanRepository.findById(loanId)
-                .orElseThrow(() -> new RuntimeException("Loan not found"));
+                .orElseThrow(() -> new IllegalArgumentException("Loan not found"));
 
-        // Ustaw książkę jako dostępną przed usunięciem wypożyczenia
-        Book book = loan.getBook();
-        book.setAvailable(true);
-        bookRepository.save(book);
+        // Sprawdź, czy wypożyczenie należy do zalogowanego użytkownika
+        if (!loan.getUser().equals(libraryUser)) {
+            throw new SecurityException("You are not authorized to delete this loan");
+        }
 
         loanRepository.delete(loan);
     }
