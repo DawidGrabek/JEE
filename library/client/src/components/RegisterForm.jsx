@@ -138,7 +138,7 @@ function RegisterForm() {
       <Link
         component="button"
         variant="body2"
-        onClick={() => navigate('/login')}
+        onClick={() => navigate('/')}
         sx={{ marginTop: 2 }}
       >
         Masz już konto? Zaloguj się
