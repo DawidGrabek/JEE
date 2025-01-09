@@ -49,7 +49,6 @@ function RegisterForm() {
       })
 
       const data = await response.json()
-      console.log(data)
 
       if (response.ok) {
         setErrors({
@@ -58,7 +57,7 @@ function RegisterForm() {
           confirmPassword: '',
           general: '',
         }) // Resetowanie błędów
-        navigate('/login')
+        navigate('/')
       } else {
         setErrors({
           ...errors,

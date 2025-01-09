@@ -6,40 +6,32 @@ import {
   ListItem,
   ListItemText,
   Chip,
+  Button,
 } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
 
-function BooksList() {
-  const [books, setBooks] = useState([])
-  const navigate = useNavigate()
-
-  useEffect(() => {
-    const fetchBooks = async () => {
-      const token = localStorage.getItem('token') // Pobierz token z localStorage
-
-      try {
-        const response = await fetch('http://localhost:8080/api/books', {
-          headers: {
-            Authorization: `Bearer ${token}`, // Dodanie tokena do nagłówka
-          },
-        })
-
-        if (response.ok) {
-          const data = await response.json()
-          setBooks(data) // Aktualizuj stan książek
-        } else if (response.status === 401 || response.status === 403) {
-          console.error('Brak autoryzacji. Przekierowanie do logowania.')
-          navigate('/') // Przekierowanie na stronę logowania
-        } else {
-          console.error('Błąd podczas pobierania danych.')
+function BooksList({ books, refreshData }) {
+  const handleBorrowBook = async (bookId) => {
+    const token = localStorage.getItem('token')
+    try {
+      const response = await fetch(
+        `http://localhost:8080/api/loans/loan/${bookId}`,
+        {
+          method: 'POST',
+          headers: { Authorization: `Bearer ${token}` },
         }
-      } catch (error) {
-        console.error('Błąd połączenia z serwerem:', error)
-      }
-    }
+      )
 
-    fetchBooks()
-  }, [navigate])
+      if (response.ok) {
+        console.log('Książka została wypożyczona.')
+        refreshData() // Odśwież dane
+      } else {
+        console.error('Nie udało się wypożyczyć książki.')
+      }
+    } catch (error) {
+      console.error('Błąd połączenia z serwerem:', error)
+    }
+  }
 
   return (
     <Box>
@@ -49,7 +41,10 @@ function BooksList() {
       {books.length > 0 ? (
         <List>
           {books.map((book) => (
-            <ListItem key={book.id}>
+            <ListItem
+              key={book.id}
+              sx={{ display: 'flex', justifyContent: 'space-between' }}
+            >
               <ListItemText
                 primary={book.title}
                 secondary={`Autor: ${book.author}`}
@@ -57,7 +52,16 @@ function BooksList() {
               <Chip
                 label={book.available ? 'Dostępna' : 'Wypożyczona'}
                 color={book.available ? 'success' : 'error'}
+                sx={{ marginRight: 2 }}
               />
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => handleBorrowBook(book.id)}
+                disabled={!book.available}
+              >
+                Wypożycz
+              </Button>
             </ListItem>
           ))}
         </List>

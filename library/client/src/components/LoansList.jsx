@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import {
   Box,
   Typography,
@@ -6,97 +6,11 @@ import {
   ListItem,
   ListItemText,
   Button,
+  TextField,
+  Alert,
 } from '@mui/material'
-import { useNavigate } from 'react-router-dom'
 
-function LoansList() {
-  const [loans, setLoans] = useState([])
-  const [currentUser, setCurrentUser] = useState('')
-  const navigate = useNavigate()
-
-  useEffect(() => {
-    const fetchLoans = async () => {
-      const token = localStorage.getItem('token')
-      const userData = JSON.parse(localStorage.getItem('userData'))
-
-      try {
-        // Pobierz aktualnego użytkownika
-        const userResponse = await fetch(
-          `http://localhost:8080/api/users/${userData.id}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        )
-
-        if (userResponse.ok) {
-          const userData = await userResponse.json()
-          setCurrentUser(userData.username)
-        } else {
-          console.error('Nie udało się pobrać zalogowanego użytkownika.')
-          navigate('/')
-          return
-        }
-
-        // Pobierz wypożyczenia
-        const loansResponse = await fetch('http://localhost:8080/api/loans', {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
-
-        if (loansResponse.ok) {
-          const data = await loansResponse.json()
-          setLoans(data)
-        } else if (
-          loansResponse.status === 401 ||
-          loansResponse.status === 403
-        ) {
-          console.error('Brak autoryzacji. Przekierowanie do logowania.')
-          navigate('/')
-        } else {
-          console.error('Błąd podczas pobierania danych.')
-        }
-      } catch (error) {
-        console.error('Błąd połączenia z serwerem:', error)
-      }
-    }
-
-    fetchLoans()
-  }, [navigate])
-
-  const handleReturnBook = async (loanId) => {
-    const token = localStorage.getItem('token')
-
-    try {
-      const response = await fetch(
-        `http://localhost:8080/api/loans/return/${loanId}`,
-        {
-          method: 'POST',
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      )
-
-      if (response.ok) {
-        // Odśwież listę wypożyczeń
-        setLoans((prevLoans) =>
-          prevLoans.map((loan) =>
-            loan.id === loanId
-              ? { ...loan, returnDate: new Date().toISOString() }
-              : loan
-          )
-        )
-      } else {
-        console.error('Błąd podczas zwracania książki.')
-      }
-    } catch (error) {
-      console.error('Błąd połączenia z serwerem:', error)
-    }
-  }
-
+function LoansList({ loans, currentUser, onReturn, onDelete }) {
   return (
     <Box sx={{ marginBottom: 4 }}>
       <Typography variant="h5" gutterBottom>
@@ -125,15 +39,23 @@ function LoansList() {
                   </>
                 }
               />
-              {!loan.returnDate && loan.username === currentUser && (
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
                 <Button
                   variant="contained"
                   color="primary"
-                  onClick={() => handleReturnBook(loan.id)}
+                  onClick={() => onReturn(loan.id)}
+                  disabled={loan.username !== currentUser || loan.returnDate}
                 >
                   Zwróć książkę
                 </Button>
-              )}
+                <Button
+                  variant="outlined"
+                  color="error"
+                  onClick={() => onDelete(loan.id)}
+                >
+                  Usuń wypożyczenie
+                </Button>
+              </Box>
             </ListItem>
           ))}
         </List>

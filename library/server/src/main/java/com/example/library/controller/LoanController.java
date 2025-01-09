@@ -11,6 +11,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -41,6 +42,11 @@ public class LoanController {
         LibraryUser libraryUser = loanService.getUserByUsername(username);
 
         return new LoanDto(loanService.returnBook(libraryUser, loanId));
+    }
+
+    @DeleteMapping("/{loanId}")
+    public void deleteLoan(@PathVariable Long loanId) {
+        loanService.deleteLoan(loanId);
     }
 
     @GetMapping
