@@ -35,7 +35,7 @@ public class BookService {
         Book existingBook = getBookById(id);
         existingBook.setTitle(book.getTitle());
         existingBook.setAuthor(book.getAuthor());
-        existingBook.setAvailable(book.isAvailable());
+//        existingBook.setAvailable(book.isAvailable());
         return bookRepository.save(existingBook);
     }
 

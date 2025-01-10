@@ -59,13 +59,13 @@ public class BookController {
     public ResponseEntity<?> updateBook(@PathVariable Long id, @Valid @RequestBody Book updatedBook) {
         Book existingBook = bookService.getBookById(id);
 
-        if (!existingBook.getLoans().isEmpty()) {
+        if (!existingBook.isAvailable()) {
             return ResponseEntity.badRequest()
                     .body("Cannot edit a book that is currently loaned out.");
         }
 
         Book savedBook = bookService.updateBook(id, updatedBook);
-        return ResponseEntity.ok(savedBook);
+        return ResponseEntity.ok(new BookDto(savedBook));
     }
 
     // Endpoint: Usuń książkę
