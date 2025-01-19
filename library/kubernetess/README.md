@@ -15,7 +15,7 @@ Aplikacje hostuje na dockerhub, utworzyłem 2 obrazy `grabekd/library-client` or
 ![alt text](image-2.png)
 ![alt text](image-3.png)
 
-Dostęp do aplikacji z zewnątrz jest realizowany poprzez `Ingress`. Po wdrożeniu sprawdź adres IP kontrolera Ingress i skonfiguruj DNS lub użyj `minikube tunnel`. Następnie otwórz aplikację w przeglądarce.
+Dostęp do aplikacji z zewnątrz jest realizowany poprzez `Ingress`. Sprawdzam adres IP przez komende `minikube ip` i w drugim oknie włączam tunel `minikube tunnel`.
 
 ![alt text](image-1.png)
 
