@@ -49,7 +49,7 @@ public class WebSecurityConfig {
         http.csrf(AbstractHttpConfigurer::disable)
                 .cors().and()
                 .authorizeHttpRequests(auth->auth
-                        .requestMatchers("/authenticate","/register").permitAll()
+                        .requestMatchers("/api/authenticate","/api/register").permitAll()
                         .anyRequest().authenticated())
                 // sesja nie przechowujestanu użytkownika.
                 .exceptionHandling(

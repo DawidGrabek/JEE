@@ -27,7 +27,7 @@ public class JwtAuthenticationController {
     @Autowired
     private JwtUserDetailsService userDetailsService;
 
-    @RequestMapping(value = "/authenticate", method = RequestMethod.POST)
+    @RequestMapping(value = "/api/authenticate", method = RequestMethod.POST)
     public ResponseEntity<?> createAuthenticationToken(@RequestBody
                                                        JwtRequest authenticationRequest) throws Exception {
         authenticate(authenticationRequest.getUsername(),
@@ -42,7 +42,7 @@ public class JwtAuthenticationController {
 //        return ResponseEntity.ok(new JwtResponse(token));
     }
 
-    @RequestMapping(value = "/register", method = RequestMethod.POST)
+    @RequestMapping(value = "/api/register", method = RequestMethod.POST)
     public ResponseEntity<?> saveUser(@Valid @RequestBody LibraryUser user) {
         try {
             return ResponseEntity.ok(userDetailsService.save(user));
